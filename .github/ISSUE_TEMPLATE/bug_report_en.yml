@@ -1,12 +1,12 @@
 name: "English — Bug report"
-description: Report a reproducible problem with CatsLock
+description: Report a reproducible problem with PurrLock
 labels:
   - bug
 body:
   - type: input
     id: version
     attributes:
-      label: CatsLock version
+      label: PurrLock version
       placeholder: "1.0.1"
     validations:
       required: true

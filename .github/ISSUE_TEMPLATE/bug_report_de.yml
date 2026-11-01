@@ -1,12 +1,12 @@
 name: "Deutsch — Fehler melden"
-description: Einen reproduzierbaren Fehler in CatsLock melden
+description: Einen reproduzierbaren Fehler in PurrLock melden
 labels:
   - bug
 body:
   - type: input
     id: version
     attributes:
-      label: CatsLock-Version
+      label: PurrLock-Version
       placeholder: "1.0.1"
     validations:
       required: true

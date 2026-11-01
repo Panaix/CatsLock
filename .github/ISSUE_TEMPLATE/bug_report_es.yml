@@ -1,12 +1,12 @@
 name: "Español — Informar de un error"
-description: Informar de un problema reproducible en CatsLock
+description: Informar de un problema reproducible en PurrLock
 labels:
   - bug
 body:
   - type: input
     id: version
     attributes:
-      label: Versión de CatsLock
+      label: Versión de PurrLock
       placeholder: "1.0.1"
     validations:
       required: true

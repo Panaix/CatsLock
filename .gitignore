@@ -1,14 +1,23 @@
 .DS_Store
 
 /build/
+/PurrLock
+/PurrLock.new
+/PurrLock.app/
+/PurrLock.dmg
+/PurrLock-Installer.dmg
+
+/main.backup*.swift
+/main.before-*.swift
+
+/PurrLock.png
+/PurrLock_square.png
+
+# Ignore pre-rename local build artifacts.
 /CatsLock
 /CatsLock.new
 /CatsLock.app/
 /CatsLock.dmg
 /CatsLock-Installer.dmg
-
-/main.backup*.swift
-/main.before-*.swift
-
 /CatsLock.png
 /CatsLock_square.png

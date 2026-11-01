@@ -1,12 +1,12 @@
 name: "中文 — 报告问题"
-description: 报告 CatsLock 中可复现的问题
+description: 报告 PurrLock 中可复现的问题
 labels:
   - bug
 body:
   - type: input
     id: version
     attributes:
-      label: CatsLock 版本
+      label: PurrLock 版本
       placeholder: "1.0.1"
     validations:
       required: true

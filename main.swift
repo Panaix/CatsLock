@@ -32,9 +32,9 @@ final class AdaptiveBackgroundView: NSView {
         for child in parent.subviews {
             if let layer = child.layer {
                 switch child.identifier?.rawValue {
-                case "catslock.surface":
+                case "purrlock.surface":
                     layer.backgroundColor = cgColor(.controlBackgroundColor, for: effectiveAppearance)
-                case "catslock.card":
+                case "purrlock.card":
                     layer.backgroundColor = cgColor(.controlBackgroundColor, for: effectiveAppearance)
                 default: break
                 }
@@ -51,7 +51,7 @@ final class FlippedView: NSView {
 final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     // Язык интерфейса: русский, английский, немецкий, испанский, французский, китайский, японский.
     private var interfaceLanguage: String = {
-        if let saved = UserDefaults.standard.string(forKey: "catslock.language"), ["ru", "en", "de", "es", "fr", "zh", "ja"].contains(saved) { return saved }
+        if let saved = UserDefaults.standard.string(forKey: "purrlock.language"), ["ru", "en", "de", "es", "fr", "zh", "ja"].contains(saved) { return saved }
         let preferred = Locale.preferredLanguages.first?.lowercased() ?? "ru"
         for code in ["en", "de", "es", "fr", "zh", "ja"] {
             if preferred.hasPrefix(code) { return code }
@@ -68,7 +68,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         "Настройки": ["en": "Settings", "de": "Einstellungen", "es": "Ajustes", "fr": "Réglages", "zh": "设置", "ja": "設定"],
         "☕ Поддержать автора": ["en": "☕ Support the Author", "de": "☕ Autor unterstützen", "es": "☕ Apoyar al autor", "fr": "☕ Soutenir l’auteur", "zh": "☕ 支持作者", "ja": "☕ 作者を支援"],
         "Поддержать проект": ["en": "Support the Project", "de": "Projekt unterstützen", "es": "Apoyar el proyecto", "fr": "Soutenir le projet", "zh": "支持项目", "ja": "プロジェクトを支援"],
-        "Спасибо за поддержку CatsLock! Выберите удобный способ.": ["en": "Thank you for supporting CatsLock! Choose a convenient way.", "de": "Vielen Dank für Ihre Unterstützung von CatsLock! Wählen Sie eine passende Möglichkeit.", "es": "¡Gracias por apoyar CatsLock! Elige una forma conveniente.", "fr": "Merci de soutenir CatsLock ! Choisissez le moyen qui vous convient.", "zh": "感谢您支持 CatsLock！请选择方便的方式。", "ja": "CatsLockへのご支援ありがとうございます。お好きな方法をお選びください。"],
+        "Спасибо за поддержку PurrLock! Выберите удобный способ.": ["en": "Thank you for supporting PurrLock! Choose a convenient way.", "de": "Vielen Dank für Ihre Unterstützung von PurrLock! Wählen Sie eine passende Möglichkeit.", "es": "¡Gracias por apoyar PurrLock! Elige una forma conveniente.", "fr": "Merci de soutenir PurrLock ! Choisissez le moyen qui vous convient.", "zh": "感谢您支持 PurrLock！请选择方便的方式。", "ja": "PurrLockへのご支援ありがとうございます。お好きな方法をお選びください。"],
         "Поддержать на Boosty": ["en": "Support on Boosty", "de": "Auf Boosty unterstützen", "es": "Apoyar en Boosty", "fr": "Soutenir sur Boosty", "zh": "在 Boosty 支持", "ja": "Boostyで支援"],
         "Криптовалютные кошельки": ["en": "Cryptocurrency wallets", "de": "Krypto-Wallets", "es": "Carteras de criptomonedas", "fr": "Portefeuilles crypto", "zh": "加密货币钱包", "ja": "暗号資産ウォレット"],
         "Скопировать адрес": ["en": "Copy address", "de": "Adresse kopieren", "es": "Copiar dirección", "fr": "Copier l’adresse", "zh": "复制地址", "ja": "アドレスをコピー"],
@@ -78,7 +78,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         "Закрыть": ["en": "Close", "de": "Schließen", "es": "Cerrar", "fr": "Fermer", "zh": "关闭", "ja": "閉じる"],
         "Язык интерфейса": ["en": "Interface language", "de": "Oberflächensprache", "es": "Idioma de la interfaz", "fr": "Langue de l’interface", "zh": "界面语言", "ja": "インターフェース言語"],
         "Язык сохранён": ["en": "Language saved", "de": "Sprache gespeichert", "es": "Idioma guardado", "fr": "Langue enregistrée", "zh": "语言已保存", "ja": "言語を保存しました"],
-        "Изменение языка полностью применится после перезапуска CatsLock.": ["en": "The language change will fully apply after restarting CatsLock.", "de": "Die Sprachänderung wird nach einem Neustart von CatsLock vollständig übernommen.", "es": "El cambio de idioma se aplicará completamente al reiniciar CatsLock.", "fr": "Le changement de langue sera entièrement appliqué après le redémarrage de CatsLock.", "zh": "重启 CatsLock 后将完全应用语言更改。", "ja": "CatsLockを再起動すると言語変更が完全に反映されます。"],
+        "Изменение языка полностью применится после перезапуска PurrLock.": ["en": "The language change will fully apply after restarting PurrLock.", "de": "Die Sprachänderung wird nach einem Neustart von PurrLock vollständig übernommen.", "es": "El cambio de idioma se aplicará completamente al reiniciar PurrLock.", "fr": "Le changement de langue sera entièrement appliqué après le redémarrage de PurrLock.", "zh": "重启 PurrLock 后将完全应用语言更改。", "ja": "PurrLockを再起動すると言語変更が完全に反映されます。"],
         "Понятно": ["en": "OK", "de": "Verstanden", "es": "Entendido", "fr": "Compris", "zh": "知道了", "ja": "了解"],
         "сек.": ["en": "sec.", "de": "Sek.", "es": "s", "fr": "s", "zh": "秒", "ja": "秒"],
         "Клавиатура заблокирована": [
@@ -281,13 +281,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
             "zh": "状态：已解锁",
             "ja": "状態：ロック解除",
         ],
-        "Открыть CatsLock": [
-            "en": "Open CatsLock",
-            "de": "CatsLock öffnen",
-            "es": "Abrir CatsLock",
-            "fr": "Ouvrir CatsLock",
-            "zh": "打开 CatsLock",
-            "ja": "CatsLock を開く",
+        "Открыть PurrLock": [
+            "en": "Open PurrLock",
+            "de": "PurrLock öffnen",
+            "es": "Abrir PurrLock",
+            "fr": "Ouvrir PurrLock",
+            "zh": "打开 PurrLock",
+            "ja": "PurrLock を開く",
         ],
         "Настройки чувствительности…": [
             "en": "Sensitivity settings…",
@@ -337,21 +337,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
             "zh": "测试锁定",
             "ja": "テストロック",
         ],
-        "CatsLock — клавиатура заблокирована": [
-            "en": "CatsLock — keyboard locked",
-            "de": "CatsLock — Tastatur gesperrt",
-            "es": "CatsLock — teclado bloqueado",
-            "fr": "CatsLock — clavier verrouillé",
-            "zh": "CatsLock — 键盘已锁定",
-            "ja": "CatsLock — キーボードをロック中",
+        "PurrLock — клавиатура заблокирована": [
+            "en": "PurrLock — keyboard locked",
+            "de": "PurrLock — Tastatur gesperrt",
+            "es": "PurrLock — teclado bloqueado",
+            "fr": "PurrLock — clavier verrouillé",
+            "zh": "PurrLock — 键盘已锁定",
+            "ja": "PurrLock — キーボードをロック中",
         ],
-        "CatsLock — клавиатура разблокирована": [
-            "en": "CatsLock — keyboard unlocked",
-            "de": "CatsLock — Tastatur entsperrt",
-            "es": "CatsLock — teclado desbloqueado",
-            "fr": "CatsLock — clavier déverrouillé",
-            "zh": "CatsLock — 键盘已解锁",
-            "ja": "CatsLock — キーボードのロック解除中",
+        "PurrLock — клавиатура разблокирована": [
+            "en": "PurrLock — keyboard unlocked",
+            "de": "PurrLock — Tastatur entsperrt",
+            "es": "PurrLock — teclado desbloqueado",
+            "fr": "PurrLock — clavier déverrouillé",
+            "zh": "PurrLock — 键盘已解锁",
+            "ja": "PurrLock — キーボードのロック解除中",
         ],
         "Клавиатура разблокирована 🔓": [
             "en": "Keyboard unlocked 🔓",
@@ -478,7 +478,7 @@ private var isLocked: Bool {
             defer: false
         )
 
-        panel.title = "CatsLock"
+        panel.title = "PurrLock"
         panel.isReleasedWhenClosed = false
         panel.delegate = self
         panel.level = .normal
@@ -500,7 +500,7 @@ private var isLocked: Bool {
         let icon = NSTextField(labelWithString: "🔒")
         icon.font = .systemFont(ofSize: 48)
 
-        let title = NSTextField(labelWithString: "CatsLock")
+        let title = NSTextField(labelWithString: "PurrLock")
         title.font = .boldSystemFont(ofSize: 25)
         title.textColor = .white
 
@@ -613,7 +613,7 @@ private var isLocked: Bool {
             self.hideLockWindow()
         }
 
-        print("CatsLock: принудительная разблокировка выполнена")
+        print("PurrLock: принудительная разблокировка выполнена")
     }
 
     // MARK: - Main application window
@@ -625,7 +625,7 @@ private var isLocked: Bool {
             backing: .buffered,
             defer: false
         )
-        window.title = "CatsLock"
+        window.title = "PurrLock"
         window.delegate = self
         window.minSize = NSSize(width: 680, height: 420)
         window.contentMinSize = NSSize(width: 680, height: 420)
@@ -656,7 +656,7 @@ private var isLocked: Bool {
         eyebrow.font = .boldSystemFont(ofSize: 11)
         eyebrow.textColor = .secondaryLabelColor
         eyebrow.alignment = .center
-        let heading = NSTextField(labelWithString: "CatsLock")
+        let heading = NSTextField(labelWithString: "PurrLock")
         heading.font = .boldSystemFont(ofSize: 30)
         heading.alignment = .center
         let intro = NSTextField(
@@ -675,7 +675,7 @@ private var isLocked: Bool {
 
         let statusCard = NSView()
         statusCard.wantsLayer = true
-        statusCard.identifier = NSUserInterfaceItemIdentifier("catslock.card")
+        statusCard.identifier = NSUserInterfaceItemIdentifier("purrlock.card")
         statusCard.layer?.backgroundColor = cgColor(.controlBackgroundColor, for: window.effectiveAppearance)
         statusCard.layer?.cornerRadius = 16
         statusCard.translatesAutoresizingMaskIntoConstraints = false
@@ -724,7 +724,7 @@ private var isLocked: Bool {
 
         let shortcutCard = NSView()
         shortcutCard.wantsLayer = true
-        shortcutCard.identifier = NSUserInterfaceItemIdentifier("catslock.card")
+        shortcutCard.identifier = NSUserInterfaceItemIdentifier("purrlock.card")
         shortcutCard.layer?.backgroundColor = cgColor(.controlBackgroundColor, for: window.effectiveAppearance)
         shortcutCard.layer?.cornerRadius = 12
         shortcutCard.translatesAutoresizingMaskIntoConstraints = false
@@ -877,7 +877,7 @@ private var isLocked: Bool {
         heading.font = .boldSystemFont(ofSize: 22)
         heading.alignment = .center
 
-        let explanation = NSTextField(wrappingLabelWithString: L("Спасибо за поддержку CatsLock! Выберите удобный способ."))
+        let explanation = NSTextField(wrappingLabelWithString: L("Спасибо за поддержку PurrLock! Выберите удобный способ."))
         explanation.font = .systemFont(ofSize: 13)
         explanation.textColor = .secondaryLabelColor
         explanation.alignment = .center
@@ -982,7 +982,7 @@ private var isLocked: Bool {
 
     @objc private func copyDonationAddress(_ sender: NSButton) {
         guard Self.donationWallets.indices.contains(sender.tag) else {
-            print("CatsLock: неизвестный индекс криптокошелька")
+            print("PurrLock: неизвестный индекс криптокошелька")
             NSSound.beep()
             return
         }
@@ -1022,7 +1022,7 @@ private var isLocked: Bool {
     private func makeActionCard(title: String, detail: String, symbol: String, action: Selector) -> NSView {
         let card = NSView()
         card.wantsLayer = true
-        card.identifier = NSUserInterfaceItemIdentifier("catslock.card")
+        card.identifier = NSUserInterfaceItemIdentifier("purrlock.card")
         card.layer?.backgroundColor = cgColor(.controlBackgroundColor, for: mainWindow?.effectiveAppearance ?? NSApp.effectiveAppearance)
         card.layer?.cornerRadius = 12
         let icon = NSTextField(labelWithString: symbol == "checkmark.shield" ? "🛡️" : "⚙️")
@@ -1086,7 +1086,7 @@ private var isLocked: Bool {
             group.animations = [opacity, scale]
             group.duration = 0.28
             group.timingFunction = CAMediaTimingFunction(name: .easeOut)
-            page.layer?.add(group, forKey: "catslock.page.genie")
+            page.layer?.add(group, forKey: "purrlock.page.genie")
         }
         NSApp.activate(ignoringOtherApps: true)
         window.makeKeyAndOrderFront(nil)
@@ -1290,10 +1290,10 @@ private var isLocked: Bool {
 
     @objc private func interfaceLanguageChanged(_ sender: NSPopUpButton) {
         guard let code = sender.selectedItem?.representedObject as? String else { return }
-        UserDefaults.standard.set(code, forKey: "catslock.language")
+        UserDefaults.standard.set(code, forKey: "purrlock.language")
         let alert = NSAlert()
         alert.messageText = L("Язык сохранён")
-        alert.informativeText = L("Изменение языка полностью применится после перезапуска CatsLock.")
+        alert.informativeText = L("Изменение языка полностью применится после перезапуска PurrLock.")
         alert.addButton(withTitle: L("Понятно"))
         alert.runModal()
     }
@@ -1395,7 +1395,7 @@ private var isLocked: Bool {
         group.animations = [opacity, scale]
         group.duration = 0.28
         group.timingFunction = CAMediaTimingFunction(name: .easeOut)
-        page.layer?.add(group, forKey: "catslock.page.genie")
+        page.layer?.add(group, forKey: "purrlock.page.genie")
         NSApp.activate(ignoringOtherApps: true)
         window.makeKeyAndOrderFront(nil)
         window.orderFrontRegardless()
@@ -1410,7 +1410,7 @@ private var isLocked: Bool {
         }
 
         guard eventTap != nil else {
-            print("CatsLock: невозможно запустить тестовую блокировку без Accessibility")
+            print("PurrLock: невозможно запустить тестовую блокировку без Accessibility")
             NSSound.beep()
             return
         }
@@ -1441,16 +1441,16 @@ private var isLocked: Bool {
             options: [.alert, .sound]
         ) { granted, error in
             if let error = error {
-                print("CatsLock: ошибка уведомлений: \(error.localizedDescription)")
+                print("PurrLock: ошибка уведомлений: \(error.localizedDescription)")
             } else if granted {
-                print("CatsLock: разрешение на уведомления получено")
+                print("PurrLock: разрешение на уведомления получено")
             }
         }
     }
 
     private func showNotification(locked: Bool) {
         let content = UNMutableNotificationContent()
-        content.title = "CatsLock"
+        content.title = "PurrLock"
         content.body = locked
             ? L("Клавиатура заблокирована 🔒")
             : L("Клавиатура разблокирована 🔓")
@@ -1464,7 +1464,7 @@ private var isLocked: Bool {
 
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
-                print("CatsLock: ошибка уведомления: \(error.localizedDescription)")
+                print("PurrLock: ошибка уведомления: \(error.localizedDescription)")
             }
         }
     }
@@ -1488,10 +1488,10 @@ private var isLocked: Bool {
 
         if locked {
             showLockWindow()
-            print("CatsLock: клавиатура заблокирована")
+            print("PurrLock: клавиатура заблокирована")
         } else {
             hideLockWindow()
-            print("CatsLock: клавиатура разблокирована")
+            print("PurrLock: клавиатура разблокирована")
         }
     }
 
@@ -1504,7 +1504,7 @@ private var isLocked: Bool {
 
         if let button = statusItem.button {
             button.title = "🐱"
-            button.toolTip = L("CatsLock — клавиатура разблокирована")
+            button.toolTip = L("PurrLock — клавиатура разблокирована")
         }
 
         let menu = NSMenu()
@@ -1518,7 +1518,7 @@ private var isLocked: Bool {
         menu.addItem(statusMenuItem)
 
         let dashboardItem = NSMenuItem(
-            title: L("Открыть CatsLock"),
+            title: L("Открыть PurrLock"),
             action: #selector(showDashboard),
             keyEquivalent: ""
         )
@@ -1574,7 +1574,7 @@ private var isLocked: Bool {
 
     @objc private func toggleLockFromMenu() {
         guard eventTap != nil else {
-            print("CatsLock: блокировка недоступна")
+            print("PurrLock: блокировка недоступна")
             NSSound.beep()
             return
         }
@@ -1606,8 +1606,8 @@ private var isLocked: Bool {
         if let button = statusItem?.button {
             button.title = isLocked ? "🔒" : "🐱"
             button.toolTip = isLocked
-                ? L("CatsLock — клавиатура заблокирована")
-                : L("CatsLock — клавиатура разблокирована")
+                ? L("PurrLock — клавиатура заблокирована")
+                : L("PurrLock — клавиатура разблокирована")
         }
     }
 
@@ -1630,7 +1630,7 @@ private var isLocked: Bool {
     }
 
     private func setupKeyboardTap() {
-        print("CatsLock: проверяю разрешение Accessibility")
+        print("PurrLock: проверяю разрешение Accessibility")
 
         let options = [
             kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: false
@@ -1643,11 +1643,11 @@ private var isLocked: Bool {
         }
 
         stopAccessibilityRetry()
-        print("CatsLock: разрешение есть")
+        print("PurrLock: разрешение есть")
 
         if eventTap != nil {
             CGEvent.tapEnable(tap: eventTap!, enable: true)
-            print("CatsLock: перехват уже существует; повторно активирован")
+            print("PurrLock: перехват уже существует; повторно активирован")
             return
         }
 
@@ -1705,7 +1705,7 @@ private var isLocked: Bool {
 
         CGEvent.tapEnable(tap: newEventTap, enable: true)
 
-        print("CatsLock: перехват создан и включён; готово")
+        print("PurrLock: перехват создан и включён; готово")
     }
 
     // MARK: - Keyboard events
@@ -1810,7 +1810,7 @@ private var isLocked: Bool {
                distinctKeyCount >= catDetectionDistinctKeys {
 
                 print(
-                    "CatsLock: обнаружена серия быстрых нажатий — включаю автозащиту"
+                    "PurrLock: обнаружена серия быстрых нажатий — включаю автозащиту"
                 )
 
                 setLocked(true)
@@ -1822,6 +1822,24 @@ private var isLocked: Bool {
     }
 }
 
+private func migrateLegacyPreferences() {
+    guard let legacyDefaults = UserDefaults(suiteName: "com.catslock.app") else { return }
+    let defaults = UserDefaults.standard
+    let keys = [
+        ("catslock.language", "purrlock.language"),
+        ("catDetectionWindow", "catDetectionWindow"),
+        ("catDetectionThreshold", "catDetectionThreshold"),
+        ("catDetectionDistinctKeys", "catDetectionDistinctKeys")
+    ]
+
+    for (legacyKey, currentKey) in keys {
+        guard defaults.object(forKey: currentKey) == nil,
+              let value = legacyDefaults.object(forKey: legacyKey) else { continue }
+        defaults.set(value, forKey: currentKey)
+    }
+}
+
+migrateLegacyPreferences()
 let app = NSApplication.shared
 let delegate = AppDelegate()
 

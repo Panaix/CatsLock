@@ -1,12 +1,12 @@
 name: "Русский — Сообщить об ошибке"
-description: Сообщить о воспроизводимой проблеме CatsLock
+description: Сообщить о воспроизводимой проблеме PurrLock
 labels:
   - bug
 body:
   - type: input
     id: version
     attributes:
-      label: Версия CatsLock
+      label: Версия PurrLock
       placeholder: "1.0.1"
     validations:
       required: true

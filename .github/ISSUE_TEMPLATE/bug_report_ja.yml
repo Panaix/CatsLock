@@ -1,12 +1,12 @@
 name: "日本語 — 不具合を報告"
-description: CatsLock で再現可能な問題を報告する
+description: PurrLock で再現可能な問題を報告する
 labels:
   - bug
 body:
   - type: input
     id: version
     attributes:
-      label: CatsLock のバージョン
+      label: PurrLock のバージョン
       placeholder: "1.0.1"
     validations:
       required: true
