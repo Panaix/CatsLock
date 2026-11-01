@@ -22,6 +22,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
+"${ROOT_DIR}/scripts/generate-icon.sh"
 swiftc -typecheck "${ROOT_DIR}/main.swift"
 swiftc -O -target "arm64-apple-macosx${MINIMUM_MACOS_VERSION}" \
     -o "${COMPILE_DIR}/PurrLock-arm64" "${ROOT_DIR}/main.swift"
