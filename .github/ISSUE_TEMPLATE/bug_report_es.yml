@@ -1,0 +1,47 @@
+name: "Español — Informar de un error"
+description: Informar de un problema reproducible en CatsLock
+labels:
+  - bug
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Versión de CatsLock
+      placeholder: "1.0.1"
+    validations:
+      required: true
+  - type: input
+    id: macos
+    attributes:
+      label: Versión de macOS
+    validations:
+      required: true
+  - type: dropdown
+    id: architecture
+    attributes:
+      label: Procesador del Mac
+      options:
+        - Apple silicon
+        - Intel
+        - No lo sé
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Pasos para reproducirlo
+      description: No incluyas contraseñas ni texto escrito con el teclado.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportamiento esperado
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Comportamiento observado
+    validations:
+      required: true

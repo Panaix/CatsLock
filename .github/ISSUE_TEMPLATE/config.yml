@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability / Уязвимость / Sicherheitslücke / Vulnerabilidad / Faille de sécurité / 安全漏洞 / セキュリティ脆弱性
+    url: https://github.com/Panaix/CatsLock/security/advisories/new
+    about: "Report privately / Приватное сообщение / Privat melden / Informe privado / Signalement privé / 请私密报告 / 非公開で報告してください"

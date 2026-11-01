@@ -1,66 +1,24 @@
 # CatsLock
 
-CatsLock — приложение для macOS, которое временно блокирует клавиатуру и
-обнаруживает случайные быстрые нажатия.
+**Choose your language / Выберите язык / Sprache wählen / Elige tu idioma / Choisissez votre langue / 选择语言 / 言語を選択**
 
-<details>
-<summary>Описание на всех языках интерфейса / Descriptions in all supported UI languages</summary>
+| [Русский](docs/languages/ru.md) | [English](docs/languages/en.md) | [Deutsch](docs/languages/de.md) | [Español](docs/languages/es.md) | [Français](docs/languages/fr.md) | [中文](docs/languages/zh.md) | [日本語](docs/languages/ja.md) |
+|---|---|---|---|---|---|---|
+| Полный гид | Full guide | Vollständiger Leitfaden | Guía completa | Guide complet | 完整指南 | ガイド全文 |
 
-- **Русский:** CatsLock для macOS временно блокирует клавиатуру и обнаруживает случайные быстрые нажатия.
-- **English:** CatsLock for macOS temporarily locks the keyboard and detects accidental rapid keystrokes.
-- **Deutsch:** CatsLock für macOS sperrt die Tastatur vorübergehend und erkennt versehentlich schnelle Tastenanschläge.
-- **Español:** CatsLock para macOS bloquea temporalmente el teclado y detecta pulsaciones rápidas accidentales.
-- **Français:** CatsLock pour macOS verrouille temporairement le clavier et détecte les frappes rapides accidentelles.
-- **中文：** CatsLock 是一款 macOS 应用，可暂时锁定键盘并检测意外的快速按键。
-- **日本語：** CatsLock は macOS 用アプリです。キーボードを一時的にロックし、誤った素早いキー入力を検出します。
+CatsLock is a macOS app for temporarily locking the keyboard and detecting
+accidental rapid keystrokes. The app interface and the guides linked above are
+available in all seven supported languages, including the installation,
+privacy, security-reporting, build, and contribution guides.
 
-</details>
+GitHub cannot automatically select a repository document based on each
+visitor's browser language. Choose a language above; GitHub's own menus and
+controls follow the language configured in each visitor's GitHub account.
 
-Поддерживаются macOS 13 и новее, а также компьютеры Intel и Apple silicon.
+## Project resources
 
-## Установка
-
-Скачайте `CatsLock-Installer.dmg` из раздела **Releases** на GitHub, откройте
-образ и перетащите CatsLock в папку **Applications**. При первом запуске
-macOS попросит разрешить приложению доступ в разделе **Системные настройки →
-Конфиденциальность и безопасность → Универсальный доступ**. Это разрешение
-необходимо для перехвата и временной блокировки нажатий клавиатуры.
-
-## Сборка
-
-Требуются macOS 13 или новее и Swift, установленный вместе с Xcode Command
-Line Tools. Release-сборка содержит архитектуры Intel (`x86_64`) и Apple
-silicon (`arm64`).
-
-```sh
-xcode-select --install
-./scripts/build-release.sh
-```
-
-Скрипт создаёт `build/CatsLock.app` и `build/CatsLock-Installer.dmg`. Версию
-можно задать переменными `VERSION` и `BUILD_NUMBER`. По умолчанию приложение
-подписывается ad hoc, поэтому macOS может показать предупреждение при запуске.
-Для распространения без такого предупреждения нужны сертификат **Developer ID
-Application** и нотарификация Apple. Сертификат можно указать через
-переменную окружения `CODESIGN_IDENTITY`.
-
-## Конфиденциальность
-
-CatsLock обрабатывает события клавиатуры локально, чтобы переключать блокировку
-и обнаруживать быстрые нажатия. Для обнаружения приложение временно держит в
-памяти коды клавиш и время нажатий; оно не записывает текст, не сохраняет
-историю нажатий на диск и не отправляет события клавиатуры по сети.
-Пользовательские настройки хранятся локально в `UserDefaults`. Уведомления
-доставляются системной службой уведомлений macOS. В приложении нет аналитики
-или телеметрии.
-
-Подробности: [политика безопасности и конфиденциальности](SECURITY.md).
-
-## Горячие клавиши
-
-- `Control + Option + L` — переключить блокировку.
-- `Control + Option + Escape` — аварийная разблокировка.
-
-## Лицензия
-
-Проект распространяется по лицензии MIT. См. [LICENSE](LICENSE).
+- [Releases and macOS installer](https://github.com/Panaix/CatsLock/releases)
+- [Report a bug or suggest a feature — choose from seven languages](https://github.com/Panaix/CatsLock/issues/new/choose)
+- [Choose the language for a bug report or feature request](https://github.com/Panaix/CatsLock/issues/new/choose)
+- [Security policy](SECURITY.md)
+- [MIT License](LICENSE) (the canonical license text is in English)

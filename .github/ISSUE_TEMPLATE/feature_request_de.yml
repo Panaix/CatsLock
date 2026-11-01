@@ -1,0 +1,23 @@
+name: "Deutsch — Verbesserung vorschlagen"
+description: Eine Verbesserung für CatsLock vorschlagen
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Welches Problem soll gelöst werden?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Lösungsvorschlag
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Geprüfte Alternativen
+    validations:
+      required: false

@@ -18,11 +18,19 @@ jobs:
     runs-on: macos-26
     steps:
       - name: Check out source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
+
+      - name: Validate localized issue forms
+        run: |
+          ruby -e 'require "yaml"; Dir.glob(".github/ISSUE_TEMPLATE/*.yml").each { |file| YAML.load_file(file); puts "#{file}: OK" }'
+          for language in ru en de es fr zh ja; do
+            test -f "docs/languages/${language}.md"
+            test -f ".github/ISSUE_TEMPLATE/bug_report_${language}.yml"
+            test -f ".github/ISSUE_TEMPLATE/feature_request_${language}.yml"
+          done
 
       - name: Build universal app and installer
         env:
-          VERSION: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '1.0.0' }}
           BUILD_NUMBER: ${{ github.run_number }}
         run: ./scripts/build-release.sh
 
@@ -35,7 +43,7 @@ jobs:
           hdiutil verify build/CatsLock-Installer.dmg
 
       - name: Upload installer artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: CatsLock-Installer
           path: build/CatsLock-Installer.dmg
@@ -51,7 +59,7 @@ jobs:
       contents: write
     steps:
       - name: Download installer
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: CatsLock-Installer
           path: dist
@@ -62,7 +70,38 @@ jobs:
           GH_REPO: ${{ github.repository }}
           TAG_NAME: ${{ github.ref_name }}
         run: |
-          gh release create "${TAG_NAME}" dist/CatsLock-Installer.dmg \
-            --verify-tag \
-            --title "CatsLock ${TAG_NAME}" \
-            --generate-notes
+          VERSION="${TAG_NAME#v}"
+          cat > dist/release-notes.md <<EOF
+          ## Русский
+          CatsLock ${VERSION} для macOS 13 и новее (Intel и Apple silicon). Скачайте \`CatsLock-Installer.dmg\`, откройте образ и перетащите приложение в Applications. При первом запуске разрешите доступ в Системных настройках → Конфиденциальность и безопасность → Универсальный доступ. Сборка не подписана Developer ID и не нотарифицирована Apple; macOS может показать предупреждение.
+
+          ## English
+          CatsLock ${VERSION} for macOS 13 or later (Intel and Apple silicon). Download \`CatsLock-Installer.dmg\`, open it, and drag the app to Applications. On first launch, grant access in System Settings → Privacy & Security → Accessibility. This build is not Developer ID signed or Apple-notarized; macOS may show a warning.
+
+          ## Deutsch
+          CatsLock ${VERSION} für macOS 13 oder neuer (Intel und Apple silicon). Laden Sie \`CatsLock-Installer.dmg\` herunter, öffnen Sie das Image und ziehen Sie die App in Programme. Erlauben Sie beim ersten Start den Zugriff unter Systemeinstellungen → Datenschutz & Sicherheit → Bedienungshilfen. Dieser Build ist nicht mit Developer ID signiert und nicht von Apple notariell beglaubigt; macOS kann eine Warnung anzeigen.
+
+          ## Español
+          CatsLock ${VERSION} para macOS 13 o posterior (Intel y Apple silicon). Descarga \`CatsLock-Installer.dmg\`, ábrelo y arrastra la aplicación a Aplicaciones. Al iniciar por primera vez, concede acceso en Ajustes del Sistema → Privacidad y seguridad → Accesibilidad. Esta versión no tiene firma Developer ID ni notarización de Apple; macOS puede mostrar una advertencia.
+
+          ## Français
+          CatsLock ${VERSION} pour macOS 13 ou version ultérieure (Intel et Apple silicon). Téléchargez \`CatsLock-Installer.dmg\`, ouvrez-le et faites glisser l’application dans Applications. Au premier lancement, autorisez l’accès dans Réglages Système → Confidentialité et sécurité → Accessibilité. Cette version n’est pas signée Developer ID ni notariée par Apple ; macOS peut afficher un avertissement.
+
+          ## 中文
+          CatsLock ${VERSION}，支持 macOS 13 或更高版本（Intel 和 Apple silicon）。下载 \`CatsLock-Installer.dmg\`，打开后将应用拖到“应用程序”文件夹。首次启动时，请在“系统设置 → 隐私与安全性 → 辅助功能”中授权。此版本没有 Developer ID 签名，也未经过 Apple 公证；macOS 可能显示警告。
+
+          ## 日本語
+          CatsLock ${VERSION}（macOS 13 以降、Intel および Apple silicon 対応）。\`CatsLock-Installer.dmg\` をダウンロードして開き、アプリを「アプリケーション」フォルダへドラッグしてください。初回起動時に「システム設定 → プライバシーとセキュリティ → アクセシビリティ」で許可してください。このビルドは Developer ID 署名および Apple notarization 未実施のため、macOS が警告を表示する場合があります。
+          EOF
+
+          if gh release view "${TAG_NAME}" >/dev/null 2>&1; then
+            gh release upload "${TAG_NAME}" dist/CatsLock-Installer.dmg --clobber
+            gh release edit "${TAG_NAME}" \
+              --title "CatsLock ${TAG_NAME}" \
+              --notes-file dist/release-notes.md
+          else
+            gh release create "${TAG_NAME}" dist/CatsLock-Installer.dmg \
+              --verify-tag \
+              --title "CatsLock ${TAG_NAME}" \
+              --notes-file dist/release-notes.md
+          fi
