@@ -6,6 +6,9 @@ PurrLock ist eine macOS-App, die die Tastatur vorübergehend sperrt und
 versehentlich schnelle Tastenanschläge erkennt. Die App-Oberfläche ist auf
 Russisch, Englisch, Deutsch, Spanisch, Französisch, Chinesisch und Japanisch
 verfügbar.
+Die automatische Schutzfunktion zählt auch Tastenwiederholungen und Anschläge
+mit Modifikatoren; bei hoher Empfindlichkeit kann die Sperre versehentlich
+ausgelöst werden.
 
 ## Voraussetzungen
 

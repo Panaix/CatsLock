@@ -5,6 +5,9 @@
 PurrLock est une application macOS qui verrouille temporairement le clavier et
 détecte les frappes rapides accidentelles. L’interface est disponible en
 russe, anglais, allemand, espagnol, français, chinois et japonais.
+La protection automatique compte aussi les répétitions d’une touche maintenue
+et les frappes avec modificateurs ; une sensibilité élevée peut provoquer un
+verrouillage accidentel.
 
 ## Configuration requise
 

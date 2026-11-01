@@ -15,6 +15,10 @@ PurrLock — приложение для macOS, которое временно 
 поддерживает Intel и Apple silicon, а интерфейс — русский, английский,
 немецкий, испанский, французский, китайский и японский языки.
 
+Автозащита учитывает быстрые нажатия, удерживаемые клавиши и нажатия с
+модификаторами. При высокой чувствительности возможны случайные блокировки,
+например при быстром наборе текста.
+
 ### Требования
 
 - macOS 13 или новее.
@@ -113,6 +117,9 @@ accidental rapid keystrokes. Use the lock while cleaning your keyboard or
 preventing unintended input. PurrLock supports Intel and Apple silicon Macs,
 and its interface is available in Russian, English, German, Spanish, French,
 Chinese, and Japanese.
+
+Automatic protection counts rapid presses, held-key repeats, and key presses
+with modifiers. At high sensitivity, fast typing may trigger an unintended lock.
 
 ### Requirements
 
@@ -213,6 +220,10 @@ versehentlich schnelle Tastenanschläge erkennt. Verwenden Sie die Sperre beim
 Reinigen der Tastatur oder um unbeabsichtigte Eingaben zu verhindern. PurrLock
 unterstützt Intel- und Apple-Silicon-Macs. Die Oberfläche ist auf Russisch,
 Englisch, Deutsch, Spanisch, Französisch, Chinesisch und Japanisch verfügbar.
+
+Die automatische Schutzfunktion zählt schnelle Anschläge, Tastenwiederholungen
+und Tastenanschläge mit Modifikatoren. Bei hoher Empfindlichkeit kann schnelles
+Tippen versehentlich die Sperre auslösen.
 
 ### Voraussetzungen
 
@@ -318,6 +329,10 @@ o para evitar entradas involuntarias. PurrLock es compatible con Mac Intel y
 Apple silicon, y su interfaz está disponible en ruso, inglés, alemán, español,
 francés, chino y japonés.
 
+La protección automática cuenta las pulsaciones rápidas, las repeticiones de
+teclas mantenidas y las pulsaciones con modificadores. Una sensibilidad alta
+puede bloquear el teclado accidentalmente al escribir rápido.
+
 ### Requisitos
 
 - macOS 13 o posterior.
@@ -420,6 +435,10 @@ nettoyer le clavier ou éviter les saisies involontaires. PurrLock prend en
 charge les Mac Intel et Apple silicon ; son interface est disponible en russe,
 anglais, allemand, espagnol, français, chinois et japonais.
 
+La protection automatique compte les frappes rapides, les répétitions d’une
+touche maintenue et les frappes avec modificateurs. Une sensibilité élevée peut
+verrouiller le clavier par erreur lors d’une frappe rapide.
+
 ### Configuration requise
 
 - macOS 13 ou version ultérieure.
@@ -521,6 +540,9 @@ PurrLock 是一款 macOS 应用，可暂时锁定键盘并检测意外的快速�
 键盘或防止意外输入时，可以启用键盘锁。PurrLock 支持 Intel 和 Apple
 silicon Mac，应用界面支持俄语、英语、德语、西班牙语、法语、中文和日语。
 
+自动保护会统计快速按键、长按重复以及带修饰键的按键。在高灵敏度下，
+快速打字可能会意外触发键盘锁定。
+
 ### 系统要求
 
 - macOS 13 或更高版本。
@@ -616,6 +638,10 @@ PurrLock は、キーボードを一時的にロックし、誤った素早い�
 ときにロックできます。Intel と Apple silicon の Mac に対応し、ロシア語、
 英語、ドイツ語、スペイン語、フランス語、中国語、日本語のインター
 フェースを利用できます。
+
+自動保護は、素早い入力、長押しによるキーリピート、修飾キーと同時の
+入力も検出します。感度が高い場合、速い入力で誤ってロックされることが
+あります。
 
 ### 動作要件
 
