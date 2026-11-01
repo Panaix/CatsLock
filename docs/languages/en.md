@@ -5,6 +5,8 @@
 PurrLock is a macOS app that temporarily locks the keyboard and detects
 accidental rapid keystrokes. The app interface is available in Russian,
 English, German, Spanish, French, Chinese, and Japanese.
+Automatic protection also counts held-key repeats and key presses with
+modifiers; high sensitivity may cause an unintended lock.
 
 ## Requirements
 

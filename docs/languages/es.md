@@ -5,6 +5,9 @@
 PurrLock es una aplicación para macOS que bloquea temporalmente el teclado y
 detecta pulsaciones rápidas accidentales. La interfaz está disponible en ruso,
 inglés, alemán, español, francés, chino y japonés.
+La protección automática también cuenta las repeticiones de teclas mantenidas y
+las pulsaciones con modificadores; una sensibilidad alta puede provocar un
+bloqueo accidental.
 
 ## Requisitos
 

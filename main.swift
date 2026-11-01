@@ -241,13 +241,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
             "zh": "保护灵敏度",
             "ja": "保護感度",
         ],
-        "Изменения сохраняются автоматически. Меньше нажатий и разных клавиш — выше чувствительность. Больший интервал даёт больше времени на набор.": [
-            "en": "Changes are saved automatically. Fewer presses and distinct keys increase sensitivity. A longer interval gives more time to type.",
-            "de": "Änderungen werden automatisch gespeichert. Weniger Tastenanschläge und unterschiedliche Tasten erhöhen die Empfindlichkeit. Ein längeres Zeitfenster gibt mehr Zeit zum Tippen.",
-            "es": "Los cambios se guardan automáticamente. Menos pulsaciones y teclas distintas aumentan la sensibilidad. Un intervalo mayor da más tiempo para escribir.",
-            "fr": "Les modifications sont enregistrées automatiquement. Moins de frappes et de touches différentes augmentent la sensibilité. Un intervalle plus long laisse davantage de temps pour taper.",
-            "zh": "更改会自动保存。按键次数和不同按键越少，灵敏度越高。更长的时间间隔可提供更多输入时间。",
-            "ja": "変更は自動保存されます。押下回数や異なるキー数を少なくすると感度が上がります。間隔を長くすると入力時間に余裕ができます。",
+        "Изменения сохраняются автоматически. Меньше нажатий и разных клавиш, а также более длинное окно повышают чувствительность. Автоповторы тоже учитываются. При высокой чувствительности быстрая печать или удержание клавиши могут вызвать блокировку.": [
+            "en": "Changes are saved automatically. Fewer presses and distinct keys, plus a longer window, increase sensitivity. Key repeats count too. High sensitivity may lock during fast typing or a held key.",
+            "de": "Änderungen werden automatisch gespeichert. Weniger Anschläge und verschiedene Tasten sowie ein längeres Zeitfenster erhöhen die Empfindlichkeit. Tastenwiederholungen zählen mit. Bei hoher Empfindlichkeit kann schnelles Tippen oder eine gehaltene Taste die Sperre auslösen.",
+            "es": "Los cambios se guardan automáticamente. Menos pulsaciones y teclas distintas, junto con un intervalo más largo, aumentan la sensibilidad. También cuentan las repeticiones. Una sensibilidad alta puede bloquear el teclado al escribir rápido o mantener una tecla.",
+            "fr": "Les modifications sont enregistrées automatiquement. Moins de frappes et de touches différentes, ainsi qu’une fenêtre plus longue, augmentent la sensibilité. Les répétitions comptent aussi. Une sensibilité élevée peut verrouiller le clavier lors d’une frappe rapide ou d’une touche maintenue.",
+            "zh": "更改会自动保存。减少按键次数和不同按键数、延长分析窗口可提高灵敏度。按键自动重复也会计入。灵敏度过高时，快速打字或长按按键可能触发锁定。",
+            "ja": "変更は自動保存されます。押下回数や異なるキー数を減らし、分析時間を長くすると感度が上がります。キーのリピートもカウントされます。感度が高いと、速い入力やキーの長押しでロックされる場合があります。",
         ],
         "Окно анализа": [
             "en": "Analysis window",
@@ -395,9 +395,9 @@ private var isLocked: Bool {
     private var accessibilityRetryTimer: DispatchSourceTimer?
 
     // Настройки обнаружения быстрого набора.
-    private var catDetectionWindow: Double = 1.3
-    private var catDetectionThreshold = 24
-    private var catDetectionDistinctKeys = 9
+    private var catDetectionWindow: Double = 1.8
+    private var catDetectionThreshold = 16
+    private var catDetectionDistinctKeys = 5
 
     private var recentKeyPresses: [(time: CFTimeInterval, keyCode: CGKeyCode)] = []
 
@@ -446,6 +446,7 @@ private var isLocked: Bool {
 
     private func loadSettings() {
         let defaults = UserDefaults.standard
+        let sensitivitySettingsVersion = "purrlock.sensitivitySettingsVersion"
 
         if defaults.object(forKey: "catDetectionWindow") != nil {
             catDetectionWindow = defaults.double(forKey: "catDetectionWindow")
@@ -457,6 +458,17 @@ private var isLocked: Bool {
 
         if defaults.object(forKey: "catDetectionDistinctKeys") != nil {
             catDetectionDistinctKeys = defaults.integer(forKey: "catDetectionDistinctKeys")
+        }
+
+        if defaults.integer(forKey: sensitivitySettingsVersion) < 2 {
+            if catDetectionThreshold == 10 {
+                catDetectionThreshold = 3
+            }
+            if catDetectionDistinctKeys == 4 {
+                catDetectionDistinctKeys = 1
+            }
+            defaults.set(2, forKey: sensitivitySettingsVersion)
+            saveSettings()
         }
     }
 
@@ -1195,7 +1207,7 @@ private var isLocked: Bool {
 
         let explanation = NSTextField(
             wrappingLabelWithString:
-                L("Изменения сохраняются автоматически. Меньше нажатий и разных клавиш — выше чувствительность. Больший интервал даёт больше времени на набор.")
+                L("Изменения сохраняются автоматически. Меньше нажатий и разных клавиш, а также более длинное окно повышают чувствительность. Автоповторы тоже учитываются. При высокой чувствительности быстрая печать или удержание клавиши могут вызвать блокировку.")
         )
         explanation.font = .systemFont(ofSize: 13)
         explanation.textColor = NSColor.secondaryLabelColor
@@ -1219,19 +1231,19 @@ private var isLocked: Bool {
         languageRow.spacing = 12
 
         intervalSlider = makeSlider(
-            tag: 1, min: 0.5, max: 3.0, value: catDetectionWindow
+            tag: 1, min: 0.5, max: 5.0, value: catDetectionWindow
         )
         intervalValueLabel = makeValueLabel(
             String(format: "%.1f %@", catDetectionWindow, L("сек."))
         )
 
         pressesSlider = makeSlider(
-            tag: 2, min: 10, max: 40, value: Double(catDetectionThreshold)
+            tag: 2, min: 3, max: 40, value: Double(catDetectionThreshold)
         )
         pressesValueLabel = makeValueLabel("\(catDetectionThreshold)")
 
         distinctSlider = makeSlider(
-            tag: 3, min: 4, max: 15, value: Double(catDetectionDistinctKeys)
+            tag: 3, min: 1, max: 15, value: Double(catDetectionDistinctKeys)
         )
         distinctValueLabel = makeValueLabel("\(catDetectionDistinctKeys)")
 
@@ -1746,10 +1758,6 @@ private var isLocked: Bool {
         let controlPressed = flags.contains(.maskControl)
         let optionPressed = flags.contains(.maskAlternate)
         let shiftPressed = flags.contains(.maskShift)
-        let commandPressed = flags.contains(.maskCommand)
-
-        let isAutorepeat =
-            event.getIntegerValueField(.keyboardEventAutorepeat) != 0
 
         // Аварийная разблокировка:
         // Control + Option + Escape
@@ -1782,40 +1790,26 @@ private var isLocked: Bool {
             return nil
         }
 
-        let hasModifier =
-            controlPressed ||
-            optionPressed ||
-            shiftPressed ||
-            commandPressed
-
-        guard !hasModifier else {
-            return Unmanaged.passUnretained(event)
-        }
-
         let now = CFAbsoluteTimeGetCurrent()
 
-        // Анализируем только новые нажатия, без автоповтора.
-        if !isAutorepeat {
-            recentKeyPresses.append((time: now, keyCode: keyCode))
+        recentKeyPresses.append((time: now, keyCode: keyCode))
+        recentKeyPresses.removeAll {
+            now - $0.time > catDetectionWindow
+        }
 
-            recentKeyPresses.removeAll {
-                now - $0.time > catDetectionWindow
-            }
+        let distinctKeyCount = Set(
+            recentKeyPresses.map { $0.keyCode }
+        ).count
 
-            let distinctKeyCount = Set(
-                recentKeyPresses.map { $0.keyCode }
-            ).count
+        if recentKeyPresses.count >= catDetectionThreshold &&
+           distinctKeyCount >= catDetectionDistinctKeys {
 
-            if recentKeyPresses.count >= catDetectionThreshold &&
-               distinctKeyCount >= catDetectionDistinctKeys {
+            print(
+                "PurrLock: обнаружена серия быстрых или повторных нажатий — включаю автозащиту"
+            )
 
-                print(
-                    "PurrLock: обнаружена серия быстрых нажатий — включаю автозащиту"
-                )
-
-                setLocked(true)
-                return nil
-            }
+            setLocked(true)
+            return nil
         }
 
         return Unmanaged.passUnretained(event)
