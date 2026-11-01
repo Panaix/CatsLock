@@ -66,6 +66,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 
     private let translations: [String: [String: String]] = [
         "Настройки": ["en": "Settings", "de": "Einstellungen", "es": "Ajustes", "fr": "Réglages", "zh": "设置", "ja": "設定"],
+        "☕ Поддержать автора": ["en": "☕ Support the Author", "de": "☕ Autor unterstützen", "es": "☕ Apoyar al autor", "fr": "☕ Soutenir l’auteur", "zh": "☕ 支持作者", "ja": "☕ 作者を支援"],
+        "Поддержать проект": ["en": "Support the Project", "de": "Projekt unterstützen", "es": "Apoyar el proyecto", "fr": "Soutenir le projet", "zh": "支持项目", "ja": "プロジェクトを支援"],
+        "Спасибо за поддержку CatsLock! Выберите удобный способ.": ["en": "Thank you for supporting CatsLock! Choose a convenient way.", "de": "Vielen Dank für Ihre Unterstützung von CatsLock! Wählen Sie eine passende Möglichkeit.", "es": "¡Gracias por apoyar CatsLock! Elige una forma conveniente.", "fr": "Merci de soutenir CatsLock ! Choisissez le moyen qui vous convient.", "zh": "感谢您支持 CatsLock！请选择方便的方式。", "ja": "CatsLockへのご支援ありがとうございます。お好きな方法をお選びください。"],
+        "Поддержать на Boosty": ["en": "Support on Boosty", "de": "Auf Boosty unterstützen", "es": "Apoyar en Boosty", "fr": "Soutenir sur Boosty", "zh": "在 Boosty 支持", "ja": "Boostyで支援"],
+        "Криптовалютные кошельки": ["en": "Cryptocurrency wallets", "de": "Krypto-Wallets", "es": "Carteras de criptomonedas", "fr": "Portefeuilles crypto", "zh": "加密货币钱包", "ja": "暗号資産ウォレット"],
+        "Скопировать адрес": ["en": "Copy address", "de": "Adresse kopieren", "es": "Copiar dirección", "fr": "Copier l’adresse", "zh": "复制地址", "ja": "アドレスをコピー"],
+        "Адрес скопирован": ["en": "Address copied", "de": "Adresse kopiert", "es": "Dirección copiada", "fr": "Adresse copiée", "zh": "地址已复制", "ja": "アドレスをコピーしました"],
+        "Не удалось скопировать адрес.": ["en": "Could not copy the address.", "de": "Die Adresse konnte nicht kopiert werden.", "es": "No se pudo copiar la dirección.", "fr": "Impossible de copier l’adresse.", "zh": "无法复制地址。", "ja": "アドレスをコピーできませんでした。"],
+        "Не удалось открыть Boosty в браузере.": ["en": "Could not open Boosty in your browser.", "de": "Boosty konnte nicht im Browser geöffnet werden.", "es": "No se pudo abrir Boosty en el navegador.", "fr": "Impossible d’ouvrir Boosty dans le navigateur.", "zh": "无法在浏览器中打开 Boosty。", "ja": "ブラウザでBoostyを開けませんでした。"],
+        "Закрыть": ["en": "Close", "de": "Schließen", "es": "Cerrar", "fr": "Fermer", "zh": "关闭", "ja": "閉じる"],
         "Язык интерфейса": ["en": "Interface language", "de": "Oberflächensprache", "es": "Idioma de la interfaz", "fr": "Langue de l’interface", "zh": "界面语言", "ja": "インターフェース言語"],
         "Язык сохранён": ["en": "Language saved", "de": "Sprache gespeichert", "es": "Idioma guardado", "fr": "Langue enregistrée", "zh": "语言已保存", "ja": "言語を保存しました"],
         "Изменение языка полностью применится после перезапуска CatsLock.": ["en": "The language change will fully apply after restarting CatsLock.", "de": "Die Sprachänderung wird nach einem Neustart von CatsLock vollständig übernommen.", "es": "El cambio de idioma se aplicará completamente al reiniciar CatsLock.", "fr": "Le changement de langue sera entièrement appliqué après le redémarrage de CatsLock.", "zh": "重启 CatsLock 后将完全应用语言更改。", "ja": "CatsLockを再起動すると言語変更が完全に反映されます。"],
@@ -396,6 +406,8 @@ private var isLocked: Bool {
 
     private var lockWindow: NSPanel?
     private var mainWindow: NSWindow?
+    private var donationWindow: NSWindow?
+    private var donationStatusLabel: NSTextField?
     private var mainDocumentView: FlippedView?
     private var dashboardPage: NSView?
     private var settingsPage: NSView?
@@ -734,7 +746,18 @@ private var isLocked: Bool {
             shortcutCard.addSubview(view)
         }
 
-        let pageStack = NSStackView(views: [headingStack, statusCard, quickTitle, quickStack, shortcutCard])
+        let donationButton = NSButton(
+            title: L("☕ Поддержать автора"),
+            target: self,
+            action: #selector(showDonationWindow)
+        )
+        donationButton.bezelStyle = .rounded
+        donationButton.controlSize = .large
+        donationButton.contentTintColor = .systemPink
+
+        let pageStack = NSStackView(views: [
+            headingStack, statusCard, quickTitle, quickStack, shortcutCard, donationButton
+        ])
         pageStack.orientation = .vertical
         pageStack.alignment = .centerX
         pageStack.spacing = 18
@@ -823,6 +846,177 @@ private var isLocked: Bool {
             page.bottomAnchor.constraint(equalTo: document.bottomAnchor, constant: -28)
         ])
         mainWindow?.contentView?.layoutSubtreeIfNeeded()
+    }
+
+    private static let donationWallets: [(name: String, address: String)] = [
+        ("BTC", "bc1q259xvrs9gvnr7pzyfaswp73harxnl8hyvwwvqw"),
+        ("ETH (ERC20)", "0x646378b62c3e32cb293b61ffb1c84244d8d61f69"),
+        ("USDT (TRC20)", "TMkG5Y1yxgPLSEegyYeA8pYTmuagPnrxAJ"),
+        ("Monero (XMR)", "4HR2jnRAwm3SFP4r8KzxBxEKsVHKLvZ29Pxz8Qm3uqHY5aD9Kj1De2Y1W8S18fYjh9acS9NkK4VNje5pC2gVq3aYVZzLEtjf8UnUfkuTri")
+    ]
+
+    @objc private func showDonationWindow() {
+        if let donationWindow {
+            donationWindow.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+            return
+        }
+
+        let window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 620, height: 610),
+            styleMask: [.titled, .closable],
+            backing: .buffered,
+            defer: false
+        )
+        window.title = L("Поддержать проект")
+        window.isReleasedWhenClosed = false
+        window.delegate = self
+        window.center()
+
+        let heading = NSTextField(labelWithString: L("Поддержать проект"))
+        heading.font = .boldSystemFont(ofSize: 22)
+        heading.alignment = .center
+
+        let explanation = NSTextField(wrappingLabelWithString: L("Спасибо за поддержку CatsLock! Выберите удобный способ."))
+        explanation.font = .systemFont(ofSize: 13)
+        explanation.textColor = .secondaryLabelColor
+        explanation.alignment = .center
+
+        let boostyButton = NSButton(
+            title: "☕  \(L("Поддержать на Boosty"))",
+            target: self,
+            action: #selector(openBoostyDonationPage)
+        )
+        boostyButton.bezelStyle = .rounded
+        boostyButton.controlSize = .large
+        boostyButton.contentTintColor = .systemPink
+
+        let walletHeading = NSTextField(labelWithString: L("Криптовалютные кошельки"))
+        walletHeading.font = .boldSystemFont(ofSize: 14)
+
+        let walletRows = Self.donationWallets.enumerated().map { index, wallet in
+            makeDonationWalletRow(wallet, index: index)
+        }
+        let walletStack = NSStackView(views: walletRows)
+        walletStack.orientation = .vertical
+        walletStack.alignment = .leading
+        walletStack.spacing = 10
+
+        let statusLabel = NSTextField(labelWithString: "")
+        statusLabel.font = .systemFont(ofSize: 12)
+        statusLabel.textColor = .systemGreen
+        statusLabel.alignment = .center
+        statusLabel.isHidden = true
+        donationStatusLabel = statusLabel
+
+        let closeButton = NSButton(
+            title: L("Закрыть"),
+            target: self,
+            action: #selector(closeDonationWindow)
+        )
+        closeButton.bezelStyle = .rounded
+
+        let stack = NSStackView(views: [
+            heading, explanation, boostyButton, walletHeading, walletStack,
+            statusLabel, closeButton
+        ])
+        stack.orientation = .vertical
+        stack.alignment = .centerX
+        stack.spacing = 14
+        stack.translatesAutoresizingMaskIntoConstraints = false
+
+        let content = NSView()
+        content.addSubview(stack)
+        window.contentView = content
+        NSLayoutConstraint.activate([
+            stack.leadingAnchor.constraint(equalTo: content.leadingAnchor, constant: 24),
+            stack.trailingAnchor.constraint(equalTo: content.trailingAnchor, constant: -24),
+            stack.topAnchor.constraint(equalTo: content.topAnchor, constant: 20),
+            stack.bottomAnchor.constraint(equalTo: content.bottomAnchor, constant: -20),
+            walletStack.widthAnchor.constraint(equalTo: stack.widthAnchor),
+            boostyButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 36)
+        ])
+
+        donationWindow = window
+        window.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+    }
+
+    private func makeDonationWalletRow(
+        _ wallet: (name: String, address: String),
+        index: Int
+    ) -> NSView {
+        let nameLabel = NSTextField(labelWithString: wallet.name)
+        nameLabel.font = .boldSystemFont(ofSize: 12)
+
+        let copyButton = NSButton(
+            title: L("Скопировать адрес"),
+            target: self,
+            action: #selector(copyDonationAddress(_:))
+        )
+        copyButton.bezelStyle = .rounded
+        copyButton.tag = index
+
+        let header = NSStackView(views: [nameLabel, copyButton])
+        header.orientation = .horizontal
+        header.alignment = .centerY
+        header.distribution = .equalSpacing
+
+        let addressLabel = NSTextField(wrappingLabelWithString: wallet.address)
+        addressLabel.font = .monospacedSystemFont(ofSize: 10, weight: .regular)
+        addressLabel.textColor = .secondaryLabelColor
+        addressLabel.isSelectable = true
+        addressLabel.lineBreakMode = .byCharWrapping
+
+        let row = NSStackView(views: [header, addressLabel])
+        row.orientation = .vertical
+        row.alignment = .leading
+        row.spacing = 4
+        row.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            header.widthAnchor.constraint(equalTo: row.widthAnchor),
+            addressLabel.widthAnchor.constraint(equalTo: row.widthAnchor)
+        ])
+        return row
+    }
+
+    @objc private func copyDonationAddress(_ sender: NSButton) {
+        guard Self.donationWallets.indices.contains(sender.tag) else {
+            print("CatsLock: неизвестный индекс криптокошелька")
+            NSSound.beep()
+            return
+        }
+
+        let address = Self.donationWallets[sender.tag].address
+        NSPasteboard.general.clearContents()
+        guard NSPasteboard.general.setString(address, forType: .string) else {
+            showDonationError(L("Не удалось скопировать адрес."))
+            return
+        }
+
+        donationStatusLabel?.stringValue = L("Адрес скопирован")
+        donationStatusLabel?.isHidden = false
+    }
+
+    @objc private func openBoostyDonationPage() {
+        guard let url = URL(string: "https://boosty.to/panaix/donate"),
+              NSWorkspace.shared.open(url) else {
+            showDonationError(L("Не удалось открыть Boosty в браузере."))
+            return
+        }
+    }
+
+    @objc private func closeDonationWindow() {
+        donationWindow?.close()
+        donationWindow = nil
+    }
+
+    private func showDonationError(_ message: String) {
+        let alert = NSAlert()
+        alert.messageText = message
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: L("Понятно"))
+        alert.runModal()
     }
 
     private func makeActionCard(title: String, detail: String, symbol: String, action: Selector) -> NSView {
@@ -971,6 +1165,10 @@ private var isLocked: Bool {
             // Закрываем окно, но оставляем приложение работающим в Dock и меню.
             sender.orderOut(nil)
             return false
+        }
+
+        if sender === donationWindow {
+            donationWindow = nil
         }
 
         return true
