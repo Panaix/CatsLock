@@ -3,15 +3,15 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleIdentifier</key>
-	<string>com.catslock.app</string>
+	<string>com.purrlock.app</string>
 	<key>CFBundleName</key>
-	<string>Cats Lock</string>
+	<string>PurrLock</string>
 	<key>CFBundleDisplayName</key>
-	<string>Cats Lock</string>
+	<string>PurrLock</string>
 	<key>CFBundleExecutable</key>
-	<string>CatsLock</string>
+	<string>PurrLock</string>
 	<key>CFBundleIconFile</key>
-	<string>CatsLock</string>
+	<string>PurrLock</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

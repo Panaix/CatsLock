@@ -1,8 +1,8 @@
-# CatsLock — English
+# PurrLock — English
 
 [Choose another language](../../README.md)
 
-CatsLock is a macOS app that temporarily locks the keyboard and detects
+PurrLock is a macOS app that temporarily locks the keyboard and detects
 accidental rapid keystrokes. The app interface is available in Russian,
 English, German, Spanish, French, Chinese, and Japanese.
 
@@ -13,9 +13,9 @@ English, German, Spanish, French, Chinese, and Japanese.
 
 ## Install
 
-Download [CatsLock-Installer.dmg](https://github.com/Panaix/CatsLock/releases/latest),
-open it, and drag CatsLock to Applications. On first launch, grant access under
-**System Settings → Privacy & Security → Accessibility**. CatsLock needs this
+Download [PurrLock-Installer.dmg](https://github.com/Panaix/PurrLock/releases/latest),
+open it, and drag PurrLock to Applications. On first launch, grant access under
+**System Settings → Privacy & Security → Accessibility**. PurrLock needs this
 permission to process keyboard events and suppress key presses while locked.
 
 The current installer is ad hoc signed and not notarized by Apple. macOS may
@@ -23,14 +23,14 @@ show a Gatekeeper warning.
 
 ## Privacy and security
 
-CatsLock processes keyboard events locally. Key codes and event times are held
+PurrLock processes keyboard events locally. Key codes and event times are held
 temporarily in process memory to detect rapid keystrokes. The app does not
 record typed text, store key history on disk, or send keyboard events over the
 network. Settings are stored locally in `UserDefaults`; macOS delivers
 notifications. There is no analytics or telemetry.
 
 Report vulnerabilities through
-[GitHub private vulnerability reporting](https://github.com/Panaix/CatsLock/security/advisories/new),
+[GitHub private vulnerability reporting](https://github.com/Panaix/PurrLock/security/advisories/new),
 not a public Issue. Do not include passwords, personal data, or typed content.
 See the [security policy](../../SECURITY.md).
 
@@ -55,7 +55,7 @@ configured yet.
 
 ## Contributing
 
-Use the [issue forms](https://github.com/Panaix/CatsLock/issues/new/choose) to
+Use the [issue forms](https://github.com/Panaix/PurrLock/issues/new/choose) to
 report a bug or suggest an improvement. Pull requests should explain the change
 and how it was verified. Read the [contribution guide](../../CONTRIBUTING.md).
 

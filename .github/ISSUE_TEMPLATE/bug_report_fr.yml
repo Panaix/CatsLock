@@ -1,12 +1,12 @@
 name: "Français — Signaler un problème"
-description: Signaler un problème reproductible dans CatsLock
+description: Signaler un problème reproductible dans PurrLock
 labels:
   - bug
 body:
   - type: input
     id: version
     attributes:
-      label: Version de CatsLock
+      label: Version de PurrLock
       placeholder: "1.0.1"
     validations:
       required: true

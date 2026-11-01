@@ -1,8 +1,8 @@
-# CatsLock — 日本語
+# PurrLock — 日本語
 
 [ほかの言語を選択](../../README.md)
 
-CatsLock は、キーボードを一時的にロックし、誤った素早いキー入力を検出
+PurrLock は、キーボードを一時的にロックし、誤った素早いキー入力を検出
 する macOS アプリです。アプリのインターフェースはロシア語、英語、
 ドイツ語、スペイン語、フランス語、中国語、日本語に対応しています。
 
@@ -13,8 +13,8 @@ CatsLock は、キーボードを一時的にロックし、誤った素早い�
 
 ## インストール
 
-[CatsLock-Installer.dmg](https://github.com/Panaix/CatsLock/releases/latest)
-をダウンロードして開き、CatsLock を「アプリケーション」フォルダへ
+[PurrLock-Installer.dmg](https://github.com/Panaix/PurrLock/releases/latest)
+をダウンロードして開き、PurrLock を「アプリケーション」フォルダへ
 ドラッグしてください。初回起動時に **システム設定 → プライバシーと
 セキュリティ → アクセシビリティ** でアクセスを許可してください。
 キーボードイベントの処理とロック中のキー入力の一時的な抑止に必要です。
@@ -24,7 +24,7 @@ CatsLock は、キーボードを一時的にロックし、誤った素早い�
 
 ## プライバシーとセキュリティ
 
-CatsLock はキーボードイベントをローカルで処理します。素早い入力の検出
+PurrLock はキーボードイベントをローカルで処理します。素早い入力の検出
 に使うキーコードとイベント時刻は、プロセスのメモリに一時的に保持され
 ます。入力した文章を記録したり、キー履歴をディスクに保存したり、キー
 ボードイベントをネットワーク経由で送信したりしません。設定は
@@ -32,7 +32,7 @@ CatsLock はキーボードイベントをローカルで処理します。素�
 配信します。分析機能やテレメトリーはありません。
 
 脆弱性は公開 Issue ではなく、
-[GitHub の非公開セキュリティ報告](https://github.com/Panaix/CatsLock/security/advisories/new)
+[GitHub の非公開セキュリティ報告](https://github.com/Panaix/PurrLock/security/advisories/new)
 から報告してください。パスワード、個人情報、入力内容は添付しないで
 ください。詳しくは[セキュリティポリシー](../../SECURITY.md)をご覧ください。
 
@@ -57,7 +57,7 @@ Developer ID 署名と Apple notarization には Apple Developer 証明書が必
 
 ## 開発への参加
 
-[Issue フォーム](https://github.com/Panaix/CatsLock/issues/new/choose)から
+[Issue フォーム](https://github.com/Panaix/PurrLock/issues/new/choose)から
 不具合報告や改善案を送ってください。Pull Request には変更内容と確認方法
 を記載してください。[コントリビューションガイド](../../CONTRIBUTING.md)
 もご覧ください。
