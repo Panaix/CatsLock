@@ -1,0 +1,68 @@
+name: Build and validate
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and validate
+    runs-on: macos-26
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Build universal app and installer
+        env:
+          VERSION: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '1.0.0' }}
+          BUILD_NUMBER: ${{ github.run_number }}
+        run: ./scripts/build-release.sh
+
+      - name: Verify universal executable
+        run: |
+          ARCHS="$(lipo -archs build/CatsLock.app/Contents/MacOS/CatsLock)"
+          echo "Architectures: ${ARCHS}"
+          [[ " ${ARCHS} " == *" arm64 "* ]]
+          [[ " ${ARCHS} " == *" x86_64 "* ]]
+          hdiutil verify build/CatsLock-Installer.dmg
+
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CatsLock-Installer
+          path: build/CatsLock-Installer.dmg
+          if-no-files-found: error
+          retention-days: 14
+
+  publish-release:
+    name: Publish GitHub release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download installer
+        uses: actions/download-artifact@v4
+        with:
+          name: CatsLock-Installer
+          path: dist
+
+      - name: Create release and upload installer
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          gh release create "${TAG_NAME}" dist/CatsLock-Installer.dmg \
+            --verify-tag \
+            --title "CatsLock ${TAG_NAME}" \
+            --generate-notes
