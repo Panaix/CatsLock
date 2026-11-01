@@ -1,48 +1,47 @@
-name: Bug report
-description: Report a reproducible problem with CatsLock
+name: "Français — Signaler un problème"
+description: Signaler un problème reproductible dans CatsLock
 labels:
   - bug
 body:
   - type: input
     id: version
     attributes:
-      label: CatsLock version
-      placeholder: "1.0.0"
+      label: Version de CatsLock
+      placeholder: "1.0.1"
     validations:
       required: true
   - type: input
     id: macos
     attributes:
-      label: macOS version
-      placeholder: "macOS 15.0"
+      label: Version de macOS
     validations:
       required: true
   - type: dropdown
     id: architecture
     attributes:
-      label: Mac processor
+      label: Processeur du Mac
       options:
         - Apple silicon
         - Intel
-        - Unknown
+        - Inconnu
     validations:
       required: true
   - type: textarea
     id: steps
     attributes:
-      label: Steps to reproduce
-      description: Do not include passwords or text typed on the keyboard.
+      label: Étapes pour reproduire le problème
+      description: N’indiquez aucun mot de passe ni texte saisi au clavier.
     validations:
       required: true
   - type: textarea
     id: expected
     attributes:
-      label: Expected behavior
+      label: Comportement attendu
     validations:
       required: true
   - type: textarea
     id: actual
     attributes:
-      label: Actual behavior
+      label: Comportement observé
     validations:
       required: true

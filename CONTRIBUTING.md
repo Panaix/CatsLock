@@ -1,5 +1,11 @@
 # Участие в разработке
 
+**Language / Язык / Sprache / Idioma / Langue / 语言 / 言語:**
+[Русский](docs/languages/ru.md) · [English](docs/languages/en.md) ·
+[Deutsch](docs/languages/de.md) · [Español](docs/languages/es.md) ·
+[Français](docs/languages/fr.md) · [中文](docs/languages/zh.md) ·
+[日本語](docs/languages/ja.md)
+
 ## Сообщения об ошибках и предложения
 
 Перед созданием Issue проверьте, не сообщал ли кто-то уже о той же проблеме.

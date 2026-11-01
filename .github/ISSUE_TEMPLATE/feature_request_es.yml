@@ -1,23 +1,23 @@
-name: Feature request
-description: Suggest an improvement to CatsLock
+name: "Español — Proponer una mejora"
+description: Proponer una mejora para CatsLock
 labels:
   - enhancement
 body:
   - type: textarea
     id: problem
     attributes:
-      label: What problem should this solve?
+      label: ¿Qué problema debería resolver?
     validations:
       required: true
   - type: textarea
     id: proposal
     attributes:
-      label: Proposed solution
+      label: Solución propuesta
     validations:
       required: true
   - type: textarea
     id: alternatives
     attributes:
-      label: Alternatives considered
+      label: Alternativas consideradas
     validations:
       required: false

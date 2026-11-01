@@ -1,0 +1,47 @@
+name: "日本語 — 不具合を報告"
+description: CatsLock で再現可能な問題を報告する
+labels:
+  - bug
+body:
+  - type: input
+    id: version
+    attributes:
+      label: CatsLock のバージョン
+      placeholder: "1.0.1"
+    validations:
+      required: true
+  - type: input
+    id: macos
+    attributes:
+      label: macOS のバージョン
+    validations:
+      required: true
+  - type: dropdown
+    id: architecture
+    attributes:
+      label: Mac のプロセッサ
+      options:
+        - Apple silicon
+        - Intel
+        - 不明
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 再現手順
+      description: パスワードやキーボードで入力した文章は記載しないでください。
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期待する動作
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: 実際の動作
+    validations:
+      required: true
