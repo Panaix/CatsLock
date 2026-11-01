@@ -1,10 +1,20 @@
 # CatsLock
 
 CatsLock — приложение для macOS, которое временно блокирует клавиатуру и
-помогает обнаруживать случайные быстрые нажатия.
+обнаруживает случайные быстрые нажатия.
 
-Интерфейс доступен на русском, английском, немецком, испанском, французском,
-китайском и японском языках.
+<details>
+<summary>Описание на всех языках интерфейса / Descriptions in all supported UI languages</summary>
+
+- **Русский:** CatsLock для macOS временно блокирует клавиатуру и обнаруживает случайные быстрые нажатия.
+- **English:** CatsLock for macOS temporarily locks the keyboard and detects accidental rapid keystrokes.
+- **Deutsch:** CatsLock für macOS sperrt die Tastatur vorübergehend und erkennt versehentlich schnelle Tastenanschläge.
+- **Español:** CatsLock para macOS bloquea temporalmente el teclado y detecta pulsaciones rápidas accidentales.
+- **Français:** CatsLock pour macOS verrouille temporairement le clavier et détecte les frappes rapides accidentelles.
+- **中文：** CatsLock 是一款 macOS 应用，可暂时锁定键盘并检测意外的快速按键。
+- **日本語：** CatsLock は macOS 用アプリです。キーボードを一時的にロックし、誤った素早いキー入力を検出します。
+
+</details>
 
 Поддерживаются macOS 13 и новее, а также компьютеры Intel и Apple silicon.
 
