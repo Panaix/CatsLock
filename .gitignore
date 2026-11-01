@@ -1,0 +1,14 @@
+.DS_Store
+
+/build/
+/CatsLock
+/CatsLock.new
+/CatsLock.app/
+/CatsLock.dmg
+/CatsLock-Installer.dmg
+
+/main.backup*.swift
+/main.before-*.swift
+
+/CatsLock.png
+/CatsLock_square.png
