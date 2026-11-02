@@ -14,6 +14,30 @@ private func cgColor(_ color: NSColor, for appearance: NSAppearance) -> CGColor 
     return result
 }
 
+private func windowBackgroundColor(for appearance: NSAppearance) -> CGColor {
+    if #available(macOS 26.0, *) {
+        return NSColor.clear.cgColor
+    }
+    return cgColor(.windowBackgroundColor, for: appearance)
+}
+
+private func cardBackgroundColor(for appearance: NSAppearance) -> CGColor {
+    if #available(macOS 26.0, *) {
+        return cgColor(.controlBackgroundColor.withAlphaComponent(0.58), for: appearance)
+    }
+    return cgColor(.controlBackgroundColor, for: appearance)
+}
+
+private func makeMainWindowContent(root: AdaptiveBackgroundView) -> NSView {
+    guard #available(macOS 26.0, *) else { return root }
+
+    let glass = NSGlassEffectView()
+    glass.style = .regular
+    glass.cornerRadius = 0
+    glass.contentView = root
+    return glass
+}
+
 /// Обновляет сохранённые в CALayer цвета при переключении системной темы.
 final class AdaptiveBackgroundView: NSView {
     override func viewDidChangeEffectiveAppearance() {
@@ -23,7 +47,7 @@ final class AdaptiveBackgroundView: NSView {
 
     func refreshAppearanceColors() {
         if let layer = layer {
-            layer.backgroundColor = cgColor(.windowBackgroundColor, for: effectiveAppearance)
+            layer.backgroundColor = windowBackgroundColor(for: effectiveAppearance)
         }
         refreshSubviews(self)
     }
@@ -33,9 +57,17 @@ final class AdaptiveBackgroundView: NSView {
             if let layer = child.layer {
                 switch child.identifier?.rawValue {
                 case "purrlock.surface":
-                    layer.backgroundColor = cgColor(.controlBackgroundColor, for: effectiveAppearance)
+                    layer.backgroundColor = cardBackgroundColor(for: effectiveAppearance)
                 case "purrlock.card":
-                    layer.backgroundColor = cgColor(.controlBackgroundColor, for: effectiveAppearance)
+                    layer.backgroundColor = cardBackgroundColor(for: effectiveAppearance)
+                    if #available(macOS 26.0, *) {
+                        layer.borderColor = cgColor(.white.withAlphaComponent(0.22), for: effectiveAppearance)
+                        layer.borderWidth = 1
+                        layer.shadowColor = cgColor(.black.withAlphaComponent(0.12), for: effectiveAppearance)
+                        layer.shadowOpacity = 1
+                        layer.shadowRadius = 12
+                        layer.shadowOffset = CGSize(width: 0, height: -2)
+                    }
                 default: break
                 }
             }
@@ -161,14 +193,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
             "zh": "锁定键盘",
             "ja": "キーボードをロック",
         ],
-        "Быстрые действия": [
-            "en": "Quick actions",
-            "de": "Schnellaktionen",
-            "es": "Acciones rápidas",
-            "fr": "Actions rapides",
-            "zh": "快捷操作",
-            "ja": "クイックアクション",
-        ],
         "Проверить защиту": [
             "en": "Test protection",
             "de": "Schutz testen",
@@ -177,13 +201,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
             "zh": "测试保护",
             "ja": "保護をテスト",
         ],
-        "Тестовая блокировка на 7 секунд": [
-            "en": "Test lock for 7 seconds",
-            "de": "Test-Sperre für 7 Sekunden",
-            "es": "Bloqueo de prueba durante 7 segundos",
-            "fr": "Verrouillage test pendant 7 secondes",
-            "zh": "测试锁定 7 秒",
-            "ja": "7秒間のテストロック",
+        "Тест защиты длится 7 секунд": [
+            "en": "The protection test lasts 7 seconds",
+            "de": "Der Schutztest dauert 7 Sekunden",
+            "es": "La prueba de protección dura 7 segundos",
+            "fr": "Le test de protection dure 7 secondes",
+            "zh": "保护测试持续 7 秒",
+            "ja": "保護テストは7秒間続きます",
         ],
         "Настроить чувствительность": [
             "en": "Adjust sensitivity",
@@ -485,7 +509,7 @@ private var isLocked: Bool {
     private func setupLockWindow() {
         let panel = NSPanel(
             contentRect: NSRect(x: 0, y: 0, width: 460, height: 380),
-            styleMask: [.titled, .closable],
+            styleMask: [.titled, .closable, .nonactivatingPanel],
             backing: .buffered,
             defer: false
         )
@@ -493,57 +517,52 @@ private var isLocked: Bool {
         panel.title = "PurrLock"
         panel.isReleasedWhenClosed = false
         panel.delegate = self
-        panel.level = .normal
+        panel.level = .floating
         panel.isMovableByWindowBackground = true
         panel.hidesOnDeactivate = false
-        panel.appearance = NSAppearance(named: .darkAqua)
-        panel.backgroundColor = NSColor(
-            calibratedRed: 0.10,
-            green: 0.11,
-            blue: 0.13,
-            alpha: 1
-        )
+        panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .ignoresCycle]
+        panel.becomesKeyOnlyIfNeeded = true
+        panel.backgroundColor = .clear
+        panel.isOpaque = false
 
-        let content = NSView()
+        let content = AdaptiveBackgroundView()
         content.wantsLayer = true
-        content.layer?.backgroundColor = panel.backgroundColor?.cgColor
-        panel.contentView = content
+        content.autoresizingMask = [.width, .height]
+        content.layer?.backgroundColor = windowBackgroundColor(for: panel.effectiveAppearance)
+        panel.contentView = makeMainWindowContent(root: content)
 
-        let icon = NSTextField(labelWithString: "🔒")
-        icon.font = .systemFont(ofSize: 48)
+        let icon = NSImageView()
+        icon.image = NSImage(systemSymbolName: "lock.fill", accessibilityDescription: nil)
+        icon.contentTintColor = .systemGreen
+        icon.symbolConfiguration = NSImage.SymbolConfiguration(pointSize: 36, weight: .medium)
+        icon.translatesAutoresizingMaskIntoConstraints = false
 
         let title = NSTextField(labelWithString: "PurrLock")
-        title.font = .boldSystemFont(ofSize: 25)
-        title.textColor = .white
+        title.font = .boldSystemFont(ofSize: 24)
 
         let status = NSTextField(labelWithString: L("Клавиатура заблокирована"))
         status.font = .boldSystemFont(ofSize: 19)
-        status.textColor = NSColor(
-            calibratedRed: 0.45,
-            green: 0.82,
-            blue: 0.62,
-            alpha: 1
-        )
+        status.textColor = .systemGreen
 
         let description = NSTextField(
             labelWithString: L("Нажатия клавиш временно отключены")
         )
         description.font = .systemFont(ofSize: 13)
-        description.textColor = NSColor(white: 0.72, alpha: 1)
+        description.textColor = .secondaryLabelColor
 
         let shortcutTitle = NSTextField(
             labelWithString: L("Аварийная разблокировка")
         )
         shortcutTitle.font = .systemFont(ofSize: 13)
-        shortcutTitle.textColor = NSColor(white: 0.62, alpha: 1)
+        shortcutTitle.textColor = .secondaryLabelColor
 
         let shortcut = NSTextField(
             labelWithString: "Control + Option + Escape"
         )
         shortcut.font = .boldSystemFont(ofSize: 16)
-        shortcut.textColor = .white
+        shortcut.alignment = .center
 
-        for field in [icon, title, status, description, shortcutTitle, shortcut] {
+        for field in [title, status, description, shortcutTitle, shortcut] {
             field.alignment = .center
         }
 
@@ -556,20 +575,15 @@ private var isLocked: Bool {
         unlockButton.bezelStyle = .rounded
         unlockButton.controlSize = .large
         unlockButton.font = .boldSystemFont(ofSize: 14)
-        unlockButton.isBordered = true
-        unlockButton.bezelColor = NSColor(
-            calibratedRed: 0.20,
-            green: 0.55,
-            blue: 0.38,
-            alpha: 1
-        )
-        unlockButton.contentTintColor = .white
+        unlockButton.contentTintColor = .systemGreen
         unlockButton.translatesAutoresizingMaskIntoConstraints = false
 
-        NSLayoutConstraint.activate([
-            unlockButton.widthAnchor.constraint(equalToConstant: 190),
-            unlockButton.heightAnchor.constraint(equalToConstant: 38)
-        ])
+        let card = NSView()
+        card.wantsLayer = true
+        card.identifier = NSUserInterfaceItemIdentifier("purrlock.card")
+        card.layer?.backgroundColor = cardBackgroundColor(for: panel.effectiveAppearance)
+        card.layer?.cornerRadius = 18
+        card.translatesAutoresizingMaskIntoConstraints = false
 
         let stack = NSStackView(views: [
             icon,
@@ -583,25 +597,27 @@ private var isLocked: Bool {
 
         stack.orientation = .vertical
         stack.alignment = .centerX
-        stack.spacing = 13
+        stack.spacing = 12
         stack.translatesAutoresizingMaskIntoConstraints = false
-
-        content.addSubview(stack)
+        card.addSubview(stack)
+        content.addSubview(card)
 
         NSLayoutConstraint.activate([
-            stack.centerXAnchor.constraint(equalTo: content.centerXAnchor),
-            stack.centerYAnchor.constraint(equalTo: content.centerYAnchor),
-            stack.leadingAnchor.constraint(
-                greaterThanOrEqualTo: content.leadingAnchor,
-                constant: 20
-            ),
-            stack.trailingAnchor.constraint(
-                lessThanOrEqualTo: content.trailingAnchor,
-                constant: -20
-            )
+            card.leadingAnchor.constraint(equalTo: content.leadingAnchor, constant: 28),
+            card.trailingAnchor.constraint(equalTo: content.trailingAnchor, constant: -28),
+            card.centerYAnchor.constraint(equalTo: content.centerYAnchor),
+            stack.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 20),
+            stack.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -20),
+            stack.topAnchor.constraint(equalTo: card.topAnchor, constant: 24),
+            stack.bottomAnchor.constraint(equalTo: card.bottomAnchor, constant: -24),
+            icon.widthAnchor.constraint(equalToConstant: 44),
+            icon.heightAnchor.constraint(equalToConstant: 44),
+            unlockButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 190),
+            unlockButton.heightAnchor.constraint(equalToConstant: 38)
         ])
 
         lockWindow = panel
+        content.refreshAppearanceColors()
     }
 
     @objc private func unlockFromWindow() {
@@ -632,7 +648,7 @@ private var isLocked: Bool {
 
     private func setupMainWindow() {
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 1050, height: 740),
+            contentRect: NSRect(x: 0, y: 0, width: 740, height: 560),
             styleMask: [.titled, .closable, .miniaturizable, .resizable],
             backing: .buffered,
             defer: false
@@ -646,8 +662,9 @@ private var isLocked: Bool {
 
         let root = AdaptiveBackgroundView()
         root.wantsLayer = true
-        root.layer?.backgroundColor = cgColor(.windowBackgroundColor, for: window.effectiveAppearance)
-        window.contentView = root
+        root.autoresizingMask = [.width, .height]
+        root.layer?.backgroundColor = windowBackgroundColor(for: window.effectiveAppearance)
+        window.contentView = makeMainWindowContent(root: root)
 
         // Scroll view занимает всю ширину основного окна.
         let scrollView = NSScrollView()
@@ -688,7 +705,7 @@ private var isLocked: Bool {
         let statusCard = NSView()
         statusCard.wantsLayer = true
         statusCard.identifier = NSUserInterfaceItemIdentifier("purrlock.card")
-        statusCard.layer?.backgroundColor = cgColor(.controlBackgroundColor, for: window.effectiveAppearance)
+        statusCard.layer?.backgroundColor = cardBackgroundColor(for: window.effectiveAppearance)
         statusCard.layer?.cornerRadius = 16
         statusCard.translatesAutoresizingMaskIntoConstraints = false
 
@@ -724,20 +741,10 @@ private var isLocked: Bool {
         dashboardToggleButton = toggleButton
         statusCard.addSubview(toggleButton)
 
-        let quickTitle = NSTextField(labelWithString: L("Быстрые действия"))
-        quickTitle.font = .boldSystemFont(ofSize: 17)
-        quickTitle.alignment = .center
-        let quickTest = makeActionCard(title: L("Проверить защиту"), detail: L("Тестовая блокировка на 7 секунд"), symbol: "checkmark.shield", action: #selector(testProtectionFromDashboard(_:)))
-        let quickStack = NSStackView(views: [quickTest])
-        quickStack.orientation = .horizontal
-        quickStack.alignment = .top
-        quickStack.distribution = .fill
-        quickStack.spacing = 14
-
         let shortcutCard = NSView()
         shortcutCard.wantsLayer = true
         shortcutCard.identifier = NSUserInterfaceItemIdentifier("purrlock.card")
-        shortcutCard.layer?.backgroundColor = cgColor(.controlBackgroundColor, for: window.effectiveAppearance)
+        shortcutCard.layer?.backgroundColor = cardBackgroundColor(for: window.effectiveAppearance)
         shortcutCard.layer?.cornerRadius = 12
         shortcutCard.translatesAutoresizingMaskIntoConstraints = false
         let shortcutHeading = NSTextField(labelWithString: L("Горячие клавиши"))
@@ -768,11 +775,11 @@ private var isLocked: Bool {
         donationButton.contentTintColor = .systemPink
 
         let pageStack = NSStackView(views: [
-            headingStack, statusCard, quickTitle, quickStack, shortcutCard, donationButton
+            headingStack, statusCard, shortcutCard, donationButton
         ])
         pageStack.orientation = .vertical
         pageStack.alignment = .centerX
-        pageStack.spacing = 18
+        pageStack.spacing = 14
         pageStack.translatesAutoresizingMaskIntoConstraints = false
         document.addSubview(pageStack)
 
@@ -785,11 +792,32 @@ private var isLocked: Bool {
         settingsButton.setAccessibilityLabel(L("Настройки"))
         settingsButton.translatesAutoresizingMaskIntoConstraints = false
         pageStack.addSubview(settingsButton)
+
+        let testButton = NSButton(
+            title: L("Проверить защиту"),
+            target: self,
+            action: #selector(testProtectionFromDashboard(_:))
+        )
+        testButton.image = NSImage(
+            systemSymbolName: "checkmark.shield",
+            accessibilityDescription: L("Проверить защиту")
+        )
+        testButton.imagePosition = .imageLeading
+        testButton.bezelStyle = .rounded
+        testButton.controlSize = .regular
+        testButton.toolTip = L("Тест защиты длится 7 секунд")
+        testButton.setAccessibilityLabel(L("Проверить защиту"))
+        testButton.translatesAutoresizingMaskIntoConstraints = false
+        pageStack.addSubview(testButton)
+
         NSLayoutConstraint.activate([
             settingsButton.topAnchor.constraint(equalTo: pageStack.topAnchor, constant: -12),
             settingsButton.trailingAnchor.constraint(equalTo: pageStack.trailingAnchor, constant: 0),
             settingsButton.widthAnchor.constraint(equalToConstant: 36),
-            settingsButton.heightAnchor.constraint(equalToConstant: 36)
+            settingsButton.heightAnchor.constraint(equalToConstant: 36),
+            testButton.centerYAnchor.constraint(equalTo: settingsButton.centerYAnchor),
+            testButton.trailingAnchor.constraint(equalTo: settingsButton.leadingAnchor, constant: -8),
+            testButton.heightAnchor.constraint(equalToConstant: 36)
         ])
         mainDocumentView = document
         dashboardPage = pageStack
@@ -815,11 +843,6 @@ private var isLocked: Bool {
             toggleButton.trailingAnchor.constraint(equalTo: statusCard.trailingAnchor, constant: -20),
             toggleButton.centerYAnchor.constraint(equalTo: statusCard.centerYAnchor),
             toggleButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 145),
-
-            quickTitle.widthAnchor.constraint(equalTo: pageStack.widthAnchor),
-            quickStack.widthAnchor.constraint(equalTo: pageStack.widthAnchor),
-            quickStack.heightAnchor.constraint(greaterThanOrEqualToConstant: 120),
-            quickTest.widthAnchor.constraint(greaterThanOrEqualToConstant: 180),
 
             shortcutCard.widthAnchor.constraint(equalTo: pageStack.widthAnchor),
             shortcutCard.heightAnchor.constraint(equalToConstant: 100),
@@ -852,10 +875,10 @@ private var isLocked: Bool {
         page.alphaValue = 1
         document.addSubview(page)
         NSLayoutConstraint.activate([
-            page.topAnchor.constraint(equalTo: document.topAnchor, constant: 28),
-            page.leadingAnchor.constraint(equalTo: document.leadingAnchor, constant: 32),
-            page.trailingAnchor.constraint(equalTo: document.trailingAnchor, constant: -32),
-            page.bottomAnchor.constraint(equalTo: document.bottomAnchor, constant: -28)
+            page.topAnchor.constraint(equalTo: document.topAnchor, constant: 24),
+            page.leadingAnchor.constraint(equalTo: document.leadingAnchor, constant: 24),
+            page.trailingAnchor.constraint(equalTo: document.trailingAnchor, constant: -24),
+            page.bottomAnchor.constraint(equalTo: document.bottomAnchor, constant: -24)
         ])
         mainWindow?.contentView?.layoutSubtreeIfNeeded()
     }
@@ -1031,38 +1054,6 @@ private var isLocked: Bool {
         alert.runModal()
     }
 
-    private func makeActionCard(title: String, detail: String, symbol: String, action: Selector) -> NSView {
-        let card = NSView()
-        card.wantsLayer = true
-        card.identifier = NSUserInterfaceItemIdentifier("purrlock.card")
-        card.layer?.backgroundColor = cgColor(.controlBackgroundColor, for: mainWindow?.effectiveAppearance ?? NSApp.effectiveAppearance)
-        card.layer?.cornerRadius = 12
-        let icon = NSTextField(labelWithString: symbol == "checkmark.shield" ? "🛡️" : "⚙️")
-        icon.font = .systemFont(ofSize: 20)
-        let heading = NSTextField(labelWithString: title)
-        heading.font = .boldSystemFont(ofSize: 12)
-        heading.alignment = .center
-        let desc = NSTextField(wrappingLabelWithString: detail)
-        desc.font = .systemFont(ofSize: 11)
-        desc.textColor = .secondaryLabelColor
-        desc.alignment = .center
-        let button = NSButton(title: L("Открыть"), target: self, action: action)
-        button.bezelStyle = .rounded
-        let stack = NSStackView(views: [icon, heading, desc, button])
-        stack.orientation = .vertical
-        stack.alignment = .centerX
-        stack.spacing = 5
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        card.addSubview(stack)
-        NSLayoutConstraint.activate([
-            stack.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 14),
-            stack.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -10),
-            stack.topAnchor.constraint(equalTo: card.topAnchor, constant: 10),
-            stack.bottomAnchor.constraint(equalTo: card.bottomAnchor, constant: -8)
-        ])
-        return card
-    }
-
     private func screenRect(for view: NSView) -> NSRect? {
         guard let hostWindow = view.window else { return nil }
         let rectInWindow = view.convert(view.bounds, to: nil)
@@ -1117,14 +1108,13 @@ private var isLocked: Bool {
         let target = window.frame
         lockWindowTargetFrame = target
         activeLockAnimationOrigin = pendingLockAnimationOrigin
-        NSApp.activate(ignoringOtherApps: true)
 
         if let origin = pendingLockAnimationOrigin {
             let center = NSPoint(x: origin.midX, y: origin.midY)
             let start = NSRect(x: center.x - 34, y: center.y - 24, width: 68, height: 48)
             window.setFrame(start, display: true)
             window.alphaValue = 0.92
-            window.makeKeyAndOrderFront(nil)
+            window.orderFrontRegardless()
             NSAnimationContext.runAnimationGroup { context in
                 context.duration = 0.38
                 context.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
@@ -1134,7 +1124,7 @@ private var isLocked: Bool {
         } else {
             window.setFrame(target, display: true)
             window.alphaValue = 1
-            window.makeKeyAndOrderFront(nil)
+            window.orderFrontRegardless()
         }
         window.orderFrontRegardless()
         pendingLockAnimationOrigin = nil
