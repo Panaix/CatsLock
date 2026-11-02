@@ -1156,9 +1156,6 @@ private var isLocked: Bool {
 
     func windowShouldClose(_ sender: NSWindow) -> Bool {
         if sender === lockWindow {
-            if isLocked {
-                forceUnlock()
-            }
             hideLockWindow()
             return false
         }
